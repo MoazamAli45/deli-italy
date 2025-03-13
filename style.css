@@ -1,0 +1,289 @@
+body {
+  font-family: "Montserrat", sans-serif;
+  overflow-x: hidden;
+}
+.hero-slider {
+  height: 100vh;
+}
+.slide-dots button.active {
+  background-color: white;
+  width: 15px;
+  height: 15px;
+}
+.wave-shape {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  z-index: 10;
+}
+.carousel-container {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+.carousel-track {
+  display: flex;
+  transition: transform 0.9s ease-in-out;
+  height: 100vh;
+}
+.carousel-slide {
+  min-width: 100%;
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+.rotating-border {
+  animation: spin 8s linear infinite;
+}
+.rotating-border.paused {
+  animation-play-state: paused;
+}
+.mobile-menu {
+  transform: translateY(-100%);
+  transition: transform 0.3s ease-in-out;
+}
+.mobile-menu.open {
+  transform: translateY(0);
+}
+
+/* Slide content animations */
+.slide-content {
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.slide-active .slide-content {
+  opacity: 1;
+}
+
+/* Heading animations */
+.slide-heading {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.slide-active .slide-heading {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Subheading animations */
+.slide-subheading {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease 0.1s, transform 0.5s ease 0.1s;
+}
+
+.slide-active .slide-subheading {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Button animations */
+.menu-button {
+  position: relative;
+
+  border-radius: 50px;
+  width: 100px;
+  height: 100px;
+  padding: 40px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.slide-active .menu-button {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.menu-button::before {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  border: 2px dashed white;
+  border-radius: 50px;
+  transition: all 0.3s ease;
+}
+
+.menu-button:hover::before {
+  animation: spin 10s linear infinite;
+}
+
+/* Improved heading visibility */
+.slide-heading,
+.slide-subheading span {
+  display: inline-block;
+  padding: 8px 16px;
+  margin-bottom: 10px;
+}
+.slide-subheading span {
+  color: transparent;
+  -webkit-text-stroke: 1px #fff;
+  text-shadow: none;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.content-padding {
+  padding: 40px;
+}
+
+@media (max-width: 768px) {
+  .content-padding {
+    padding: 20px;
+  }
+}
+
+.sticky-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.9);
+  padding: 15px 0;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  transform: translateY(-100%);
+  transition: transform 0.3s ease-in-out;
+  z-index: 100;
+}
+
+.sticky-nav.visible {
+  transform: translateY(0);
+}
+
+/* Wave Animation */
+@keyframes waveAnimation {
+  0% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.waves {
+  width: 200%;
+  height: 100%;
+}
+
+.parallax > use {
+  animation: waveAnimation 20s cubic-bezier(0.55, 0.5, 0.45, 0.5) infinite;
+}
+
+.parallax > use:nth-child(1) {
+  animation-delay: -2s;
+  animation-duration: 20s;
+}
+
+.parallax > use:nth-child(2) {
+  animation-delay: -4s;
+  animation-duration: 25s;
+}
+
+.parallax > use:nth-child(3) {
+  animation-delay: -6s;
+  animation-duration: 30s;
+}
+
+.parallax > use:nth-child(4) {
+  animation-delay: -8s;
+  animation-duration: 35s;
+}
+
+/*  CONTACT SECTION */
+.contact-section {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.85)),
+    url("./assets/contact.jpg");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+
+.text-stroke {
+  -webkit-text-stroke: 1px white;
+  color: transparent;
+}
+
+/* Simple animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.8s forwards;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.8s forwards;
+}
+
+.animate-pulse-slow {
+  animation: pulse 3s infinite;
+}
+
+.delay-100 {
+  animation-delay: 0.1s;
+}
+.delay-200 {
+  animation-delay: 0.2s;
+}
+.delay-300 {
+  animation-delay: 0.3s;
+}
+.delay-400 {
+  animation-delay: 0.4s;
+}
+.delay-500 {
+  animation-delay: 0.5s;
+}
+.delay-600 {
+  animation-delay: 0.6s;
+}

@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="sv">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Deli Italia</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              gold: "#e6c75a",
+              dark: "#151515",
+            },
+            fontFamily: {
+              script: ["Pacifico", "cursive"],
+              sans: ["Montserrat", "sans-serif"],
+            },
+            animation: {
+              "spin-slow": "spin 8s linear infinite",
+            },
+            keyframes: {
+              wave: {
+                "0%": { transform: "translateX(0)" },
+                "50%": { transform: "translateX(-50%)" },
+                "100%": { transform: "translateX(0)" },
+              },
+            },
+          },
+        },
+      };
+    </script>
+    <!-- Alpine.js -->
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
+    ></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Pacifico&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body class="bg-black text-white" x-data="{ scrolled: false }">
+    <div
+      class="relative overflow-hidden"
+      x-init="
+      window.addEventListener('scroll', () => {
+        scrolled = window.scrollY > 100;
+      });
+    "
+    >
+      <!-- Sticky Navigation -->
+      <nav class="sticky-nav" :class="{ 'visible': scrolled }">
+        <div
+          class="container mx-auto px-6 md:px-12 flex justify-between items-center py-2"
+        >
+          <!-- NO LOGO  on mobile Nav -->
+          <a href="#" class="flex items-center opacity-0">
+            <span>Deli Itali</span>
+          </a>
+
+          <!-- Mobile Menu Button -->
+          <div class="md:hidden" x-data="{ open: false }">
+            <button @click="open = !open" class="text-white focus:outline-none">
+              <svg
+                class="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4 6h16M4 12h16M4 18h16"
+                ></path>
+              </svg>
+            </button>
+
+            <!-- Mobile Menu - Slides from top -->
+            <div
+              x-show="open"
+              x-transition:enter="transition ease-out duration-300"
+              x-transition:enter-start="opacity-0 transform -translate-y-full"
+              x-transition:enter-end="opacity-100 transform translate-y-0"
+              x-transition:leave="transition ease-in duration-300"
+              x-transition:leave-start="opacity-100 transform translate-y-0"
+              x-transition:leave-end="opacity-0 transform -translate-y-full"
+              @click.away="open = false"
+              class="fixed top-0 left-0 right-0 bg-black bg-opacity-95 p-4 md:p-6 shadow-lg z-50"
+            >
+              <div class="flex justify-between items-center mb-8">
+                <a href="#" class="flex items-center">
+                  <a href="#" class="flex items-center">
+                    <img
+                      src="./assets/logo.png"
+                      alt="Deli Italia"
+                      class="w-[100px] h-[60px]"
+                    />
+                  </a>
+                </a>
+                <button @click="open = false" class="text-white">
+                  <svg
+                    class="w-6 h-6"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M6 18L18 6M6 6l12 12"
+                    ></path>
+                  </svg>
+                </button>
+              </div>
+
+              <div class="flex flex-col space-y-4">
+                <a
+                  href="#"
+                  class="py-2 text-white hover:text-gold transition-colors"
+                  >HEM</a
+                >
+                <a
+                  href="#"
+                  class="py-2 text-white hover:text-gold transition-colors"
+                  >DAGENS LUNCH</a
+                >
+                <a
+                  href="#"
+                  class="py-2 text-white hover:text-gold transition-colors"
+                  >MENY</a
+                >
+                <a
+                  href="#"
+                  class="py-2 text-white hover:text-gold transition-colors"
+                  >KONTAKT</a
+                >
+              </div>
+            </div>
+          </div>
+
+          <!-- Desktop Menu -->
+          <div class="hidden md:flex space-x-8 text-sm font-medium">
+            <a href="#" class="text-white hover:text-gold transition-colors"
+              >HEM</a
+            >
+            <a href="#" class="text-white hover:text-gold transition-colors"
+              >DAGENS LUNCH</a
+            >
+            <a href="#" class="text-white hover:text-gold transition-colors"
+              >MENY</a
+            >
+            <a href="#" class="text-white hover:text-gold transition-colors"
+              >KONTAKT</a
+            >
+          </div>
+        </div>
+      </nav>
+
+      <!-- Hero Section with Carousel -->
+      <div class="relative" x-data="carousel()">
+        <div class="hero-slider overflow-hidden relative">
+          <!-- Carousel with horizontal sliding -->
+          <div class="carousel-container h-full">
+            <div
+              class="carousel-track"
+              :style="{ transform: `translateX(-${activeSlide * 100}%)` }"
+            >
+              <!-- Slide 1 -->
+              <div
+                class="carousel-slide"
+                :class="{'slide-active': activeSlide === 0}"
+              >
+                <div class="content-padding absolute inset-0 p-10">
+                  <div class="relative w-full h-full">
+                    <img
+                      src="./assets/slider-1.jpg"
+                      alt="Italian pizza"
+                      class="w-full h-full object-cover rounded-lg"
+                    />
+                    <div class="absolute inset-0 bg-black bg-opacity-30"></div>
+                  </div>
+                </div>
+                <div
+                  class="absolute inset-0 flex flex-col justify-center items-center text-center px-4 z-20 slide-content"
+                >
+                  <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold mb-4">
+                    <span class="block slide-heading">Upptäck</span>
+                    <span class="block mt-2 slide-subheading">
+                      <span class="text-white">Vår Meny</span>
+                    </span>
+                  </h1>
+                  <div class="mt-8">
+                    <a href="#" class="menu-button"> MENY </a>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Slide 2 -->
+              <div
+                class="carousel-slide"
+                :class="{'slide-active': activeSlide === 1}"
+              >
+                <div class="content-padding absolute inset-0 p-10">
+                  <div class="relative w-full h-full">
+                    <img
+                      src="./assets/slider-2.jpg"
+                      alt="Italian food"
+                      class="w-full h-full object-cover rounded-lg"
+                    />
+                    <div
+                      class="absolute inset-0 bg-black bg-opacity-30 rounded-lg"
+                    ></div>
+                  </div>
+                </div>
+                <div
+                  class="absolute inset-0 flex flex-col justify-center items-center text-center px-4 z-20 slide-content"
+                >
+                  <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold mb-4">
+                    <span class="block slide-heading">Smaka</span>
+                    <span class="block mt-2 slide-subheading">
+                      <span class="text-white">Äkta Italien</span>
+                    </span>
+                  </h1>
+                </div>
+              </div>
+            </div>
+
+            <!-- Wave Shape Overlay -->
+            <div class="wave-shape">
+              <svg
+                class="waves"
+                xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+                viewBox="0 24 150 28"
+                preserveAspectRatio="none"
+                shape-rendering="auto"
+              >
+                <defs>
+                  <path
+                    id="gentle-wave-1"
+                    d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z"
+                  ></path>
+                </defs>
+                <g class="parallax">
+                  <use
+                    xlink:href="#gentle-wave-1"
+                    x="48"
+                    y="0"
+                    fill="rgba(21, 21, 21, 0.7)"
+                  ></use>
+                  <use
+                    xlink:href="#gentle-wave-1"
+                    x="48"
+                    y="3"
+                    fill="rgba(21, 21, 21, 0.5)"
+                  ></use>
+                  <use
+                    xlink:href="#gentle-wave-1"
+                    x="48"
+                    y="5"
+                    fill="rgba(21, 21, 21, 0.3)"
+                  ></use>
+                  <use
+                    xlink:href="#gentle-wave-1"
+                    x="48"
+                    y="7"
+                    fill="#151515"
+                  ></use>
+                </g>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Navigation - Now inside the hero section -->
+          <nav
+            class="absolute top-0 left-0 right-0 z-50 px-6 py-20 md:px-12 lg:px-20"
+          >
+            <div class="container mx-auto flex justify-between items-center">
+              <!-- Logo -->
+              <a href="#" class="flex items-center relative">
+                <img
+                  src="./assets/logo.png"
+                  alt="Deli Italia"
+                  class="w-[100px] h-[60px] fixed top-35 left-30"
+                  :class="{ 'top-[70px]': scrolled }"
+                />
+              </a>
+
+              <!-- Mobile Menu Button -->
+              <div class="md:hidden" x-data="{ open: false }">
+                <button
+                  @click="open = !open"
+                  class="text-white focus:outline-none"
+                >
+                  <svg
+                    class="w-6 h-6"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M4 6h16M4 12h16M4 18h16"
+                    ></path>
+                  </svg>
+                </button>
+
+                <!-- Mobile Menu - Slides from top -->
+                <div
+                  x-show="open"
+                  x-transition:enter="transition ease-out duration-300"
+                  x-transition:enter-start="opacity-0 transform -translate-y-full"
+                  x-transition:enter-end="opacity-100 transform translate-y-0"
+                  x-transition:leave="transition ease-in duration-300"
+                  x-transition:leave-start="opacity-100 transform translate-y-0"
+                  x-transition:leave-end="opacity-0 transform -translate-y-full"
+                  @click.away="open = false"
+                  class="fixed top-0 left-0 right-0 bg-black bg-opacity-95 p-6 shadow-lg z-50"
+                >
+                  <div class="flex justify-between items-center mb-8">
+                    <a href="#" class="flex items-center">
+                      <span class="font-script text-2xl text-white">Deli</span>
+                      <span class="font-script text-2xl text-gold">Italia</span>
+                    </a>
+                    <button @click="open = false" class="text-white">
+                      <svg
+                        class="w-6 h-6"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M6 18L18 6M6 6l12 12"
+                        ></path>
+                      </svg>
+                    </button>
+                  </div>
+
+                  <div class="flex flex-col space-y-4">
+                    <a
+                      href="#"
+                      class="py-2 text-white hover:text-gold transition-colors"
+                      >HEM</a
+                    >
+                    <a
+                      href="#"
+                      class="py-2 text-white hover:text-gold transition-colors"
+                      >DAGENS LUNCH</a
+                    >
+                    <a
+                      href="#"
+                      class="py-2 text-white hover:text-gold transition-colors"
+                      >MENY</a
+                    >
+                    <a
+                      href="#"
+                      class="py-2 text-white hover:text-gold transition-colors"
+                      >KONTAKT</a
+                    >
+                  </div>
+                </div>
+              </div>
+
+              <!-- Desktop Menu -->
+              <div class="hidden md:flex space-x-8 text-sm font-medium">
+                <a href="#" class="text-white hover:text-gold transition-colors"
+                  >HEM</a
+                >
+                <a href="#" class="text-white hover:text-gold transition-colors"
+                  >DAGENS LUNCH</a
+                >
+                <a href="#" class="text-white hover:text-gold transition-colors"
+                  >MENY</a
+                >
+                <a href="#" class="text-white hover:text-gold transition-colors"
+                  >KONTAKT</a
+                >
+              </div>
+            </div>
+          </nav>
+
+          <!-- Slide Dots -->
+          <div
+            class="absolute bottom-20 left-20 transform -translate-y-1/2 slide-dots z-20"
+          >
+            <div class="flex flex-col items-center space-y-4">
+              <button
+                @click="goToSlide(0)"
+                :class="{'active': activeSlide === 0}"
+                class="w-2 h-2 rounded-full bg-white bg-opacity-50 transition-all"
+              ></button>
+              <button
+                @click="goToSlide(1)"
+                :class="{'active': activeSlide === 1}"
+                class="w-2 h-2 rounded-full bg-white bg-opacity-50 transition-all"
+              ></button>
+            </div>
+          </div>
+
+          <!-- Slider Controls -->
+          <div class="absolute bottom-20 right-20 flex space-x-4 z-20">
+            <div class="relative w-12 h-12">
+              <!-- Rotating dashed border -->
+              <div
+                class="absolute inset-0 w-full h-full rounded-full border-2 border-dashed border-white rotating-border"
+                :class="{'paused': paused}"
+              ></div>
+
+              <!-- Button with icon (not rotating) -->
+              <button
+                @click="toggleAutoplay"
+                class="absolute inset-0 w-full h-full rounded-full flex items-center justify-center text-white transition-colors"
+              >
+                <div
+                  class="w-10 h-10 rounded-full flex items-center justify-center"
+                >
+                  <svg
+                    x-show="!paused"
+                    class="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                    ></path>
+                  </svg>
+                  <svg
+                    x-show="paused"
+                    class="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
+                    ></path>
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    ></path>
+                  </svg>
+                </div>
+              </button>
+            </div>
+
+            <button
+              @click="prevSlide"
+              class="w-12 h-12 rounded-full border border-white bg-white flex items-center justify-center text-white transition-colors"
+            >
+              <svg
+                class="w-5 h-5"
+                fill="none"
+                stroke="#000000"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M15 19l-7-7 7-7"
+                ></path>
+              </svg>
+            </button>
+            <button
+              @click="nextSlide"
+              class="w-12 h-12 rounded-full border bg-white border-white flex items-center justify-center text-white transition-colors"
+            >
+              <svg
+                class="w-5 h-5"
+                fill="none"
+                stroke="#000000"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 5l7 7-7 7"
+                ></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--      CONTACT SECTION -->
+    <section
+      class="contact-section min-h-screen relative overflow-hidden mt-20"
+    >
+      <div class="container mx-auto px-4 py-24 relative z-10">
+        <!-- Section Header -->
+        <div class="mb-16 space-y-4">
+          <div
+            class="flex items-center justify-center space-x-4 animate-fade-in"
+          >
+            <span class="text-sm font-display">02.</span>
+            <div class="h-[1px] w-12 bg-white"></div>
+            <span class="uppercase tracking-widest text-sm">LÅT OSS PRATA</span>
+          </div>
+
+          <h1
+            class="text-4xl md:text-5xl pt-3 font-display text-center font-bold animate-fade-in delay-100"
+          >
+            Kont<span class="text-stroke">akt</span>
+          </h1>
+        </div>
+
+        <!-- Contact Grid -->
+        <div class="grid md:grid-cols-3 md:px-4 gap-8 md:gap-12 mt-20">
+          <!-- Address -->
+          <div class="animate-fade-in-up delay-200">
+            <div class="flex flex-col items-start space-y-4">
+              <div
+                class="w-12 h-12 rounded-full border border-white/30 flex items-center justify-center mb-6"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.5"
+                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                  />
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.5"
+                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                  />
+                </svg>
+              </div>
+              <address class="not-italic text-[13px] font-medium">
+                TULEGATAN 2,<br />
+                172 78 SUNDBYBERG
+              </address>
+            </div>
+          </div>
+
+          <!-- Phone -->
+          <div class="animate-fade-in-up delay-300">
+            <div class="flex flex-col items-start space-y-4">
+              <div
+                class="w-12 h-12 rounded-full border border-white/30 flex items-center justify-center mb-6"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.5"
+                    d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+                  />
+                </svg>
+              </div>
+              <a
+                href="tel:08-283666"
+                class="text-[13px] font-medium hover:text-gold transition-colors"
+              >
+                08-28 36 66
+              </a>
+            </div>
+          </div>
+
+          <!-- Email -->
+          <div class="animate-fade-in-up delay-400">
+            <div class="flex flex-col items-start space-y-4">
+              <div
+                class="w-12 h-12 rounded-full border border-white/30 flex items-center justify-center mb-6"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.5"
+                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                  />
+                </svg>
+              </div>
+              <a
+                href="mailto:INFO@DELIITALIA.NU"
+                class="text-[13px] font-medium hover:text-gold transition-colors underline"
+              >
+                INFO@DELIITALIA.NU
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contact Button -->
+        <div class="mt-24 flex justify-center animate-fade-in-up delay-500">
+          <button
+            class="group relative overflow-hidden rounded-full border-2 border-white px-8 py-4 transition-all duration-300 hover:bg-gold hover:border-gold hover:text-black animate-pulse-slow"
+          >
+            <span
+              class="relative z-10 text-sm font-medium uppercase tracking-wider"
+            >
+              ANVÄND FORMULÄRET
+            </span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Decorative Elements -->
+      <div class="absolute inset-0 z-0">
+        <div
+          class="absolute top-20 left-10 w-32 h-32 bg-gold/20 rounded-full blur-[100px]"
+        ></div>
+        <div
+          class="absolute bottom-20 right-10 w-32 h-32 bg-gold/20 rounded-full blur-[100px]"
+        ></div>
+      </div>
+    </section>
+    <script>
+      function carousel() {
+        return {
+          activeSlide: 0,
+          paused: false,
+          interval: null,
+
+          init() {
+            // Initialize the carousel and make first slide active
+            this.startAutoplay();
+
+            // Force the first slide to be visible immediately
+            setTimeout(() => {
+              const firstSlide = document.querySelector(".carousel-slide");
+              if (firstSlide) {
+                firstSlide.classList.add("slide-active");
+              }
+            }, 100);
+          },
+
+          startAutoplay() {
+            this.paused = false;
+            this.interval = setInterval(() => {
+              this.nextSlide();
+            }, 4000);
+          },
+
+          stopAutoplay() {
+            this.paused = true;
+            clearInterval(this.interval);
+          },
+
+          toggleAutoplay() {
+            if (this.paused) {
+              this.startAutoplay();
+            } else {
+              this.stopAutoplay();
+            }
+          },
+
+          nextSlide() {
+            this.activeSlide = (this.activeSlide + 1) % 2;
+          },
+
+          prevSlide() {
+            this.activeSlide = (this.activeSlide - 1 + 2) % 2;
+          },
+
+          goToSlide(index) {
+            this.activeSlide = index;
+            // Also pause the carousel when manually changing slides
+            this.stopAutoplay();
+          },
+        };
+      }
+
+      // Add this to ensure waves animate properly
+      document.addEventListener("DOMContentLoaded", function () {
+        // Force browser to recalculate animations by triggering reflow
+        const waves = document.querySelector(".waves");
+        if (waves) {
+          waves.style.display = "none";
+          waves.offsetHeight; // Force reflow
+          waves.style.display = "";
+        }
+      });
+    </script>
+  </body>
+</html>
